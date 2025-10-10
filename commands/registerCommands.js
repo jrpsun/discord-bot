@@ -8,6 +8,9 @@ async function registerCommands(clientId, guildId, token) {
     new SlashCommandBuilder()
       .setName('hello')
       .setDescription('ทักบอท'),
+    new SlashCommandBuilder()
+      .setName('random-song')
+      .setDescription('สุ่ม MV เพลงแบบ Secret'),
   ].map(cmd => cmd.toJSON());
 
   const rest = new REST({ version: '10' }).setToken(token);

@@ -1,11 +1,15 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { registerCommands } from './commands/registerCommands.js';
 import { playChallenge } from './commands/lolChallenge.js';
+import dotenv from 'dotenv';
+import { randomSong } from './commands/randomSongs.js';
+dotenv.config();
 
 
 const TOKEN = process.env.TOKEN;
 const CLIENT_ID = process.env.CLIENT_ID;
 const GUILD_ID = process.env.GUILD_ID;
+console.log("TOKEN:", TOKEN);
 
 
 // สร้าง Client
@@ -27,11 +31,15 @@ client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === 'challenge') {
-  await playChallenge(interaction);
+    await playChallenge(interaction);
   }
 
   if (interaction.commandName === 'hello') {
     await interaction.reply("สวัสดี! ฉันคือ ลุงต๋อย จะมาแจกเปาะเปี๋ยะนะ 👋");
+  }
+
+  if (interaction.commandName === 'random-song') {
+    await randomSong(interaction);
   }
 });
 
