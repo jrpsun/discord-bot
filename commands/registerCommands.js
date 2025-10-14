@@ -8,6 +8,10 @@ async function registerCommands(clientId, guildId, token) {
     new SlashCommandBuilder()
       .setName('hello')
       .setDescription('ทักบอท'),
+    new SlashCommandBuilder()
+      .setName('startgame')
+      .setDescription('ตรวจสอบว่าผู้เล่นอยู่ในเกมหรือไม่')
+      .addStringOption(option => option.setName('summoner').setDescription('ชื่อ Summoner').setRequired(true))
   ].map(cmd => cmd.toJSON());
 
   const rest = new REST({ version: '10' }).setToken(token);
