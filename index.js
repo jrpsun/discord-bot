@@ -1,6 +1,8 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 import { registerCommands } from './commands/registerCommands.js';
 import { playChallenge } from './commands/lolChallenge.js';
+import { startGameCommand } from './commands/startGame.js';
+import 'dotenv/config';
 
 
 const TOKEN = process.env.TOKEN;
@@ -28,6 +30,10 @@ client.on('interactionCreate', async (interaction) => {
 
   if (interaction.commandName === 'challenge') {
   await playChallenge(interaction);
+  }
+
+  if (interaction.commandName === 'startgame') {
+    await startGameCommand(interaction);
   }
 
   if (interaction.commandName === 'hello') {
