@@ -78,4 +78,18 @@ async function getActiveGame(puuid) {
   return await res.json();
 }
 
-export { getAccountByRiotId, getSummonerByPuuid, getActiveGame };
+
+// ตรวจสอบข้อมูล Summoner โดยใช้ PUUID
+async function getSummonerData(puuid) {
+  const url = `https://sg2.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}`;
+  const res = await fetch(url, {
+    headers: { 'X-Riot-Token': RIOT_API_KEY }
+  });
+  if (!res.ok) {
+    if (res.status === 404) return null;
+    throw new Error(`Riot API error: ${res.status} - ${res.statusText}`);
+  }
+  return await res.json();
+}
+
+export { getAccountByRiotId, getSummonerByPuuid, getActiveGame, getSummonerData };

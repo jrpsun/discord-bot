@@ -1,4 +1,4 @@
-import { getAccountByRiotId, getSummonerByPuuid, getActiveGame } from '../utils/riotApi.js';
+import { getAccountByRiotId, getSummonerByPuuid, getActiveGame, getSummonerData } from '../utils/riotApi.js';
 import { getSheetData } from '../utils/sheetApi.js';
 
 export async function startGameCommand(interaction) {
@@ -35,14 +35,29 @@ export async function startGameCommand(interaction) {
     const activeGame = await getActiveGame(account.puuid);
     
     if (activeGame) {
-      var gameParticipants = [];
+      const streamerName = []
+      const sheetData = await getSheetData();
+
+      var gameParticipants = ``;
       for (const i of (activeGame?.participants || [])) {
         if (i.riotId === summonerInput) continue;
-        console.log(i.riotId);
-        gameParticipants.push(i.riotId);
+        for (const s of sheetData) {
+          if (i.riotId === s.RIOT_ID) {
+            const summonerData = await getSummonerData(i.puuid);
+            console.log('Summoner Data:', summonerData);
+            console.log('Found participant in sheet:', i.riotId);
+            for (const entry of summonerData) {
+              if (entry.queueType === 'RANKED_SOLO_5x5') {
+                gameParticipants += `\n- ${i.riotId} (${entry.tier} ${entry.rank} - ${entry.leaguePoints} LP)`;
+              }
+            }
+          }
+        }
       }
+      //console.log('Game Participants in same game:', gameParticipants);
 
-      await interaction.editReply(`✅ ** คนที่อยู่ในเกมกับ ${summonerInput}** \n ${gameParticipants.join('\n')}`);
+      //await interaction.editReply(`✅ ** คนที่อยู่ในเกมกับ ${summonerInput}** \n ${gameParticipants.join('\n')}`);
+      await interaction.editReply(`✅ ** รายชื่อคนที่ ${summonerInput} ดักเจอ ** ${gameParticipants}`);
     } else {
       await interaction.editReply(`⏳ **${summonerInput}** ยังไม่ได้เข้าเกม รอสักครู่...`);
     }
